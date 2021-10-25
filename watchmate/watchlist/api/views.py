@@ -3,15 +3,16 @@ from rest_framework import status
 from watchlist.models import Movie
 from .serializers import MovieSerializer
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 # Create your views here.
-@api_view(['GET','POST'])
-def movie_list(request):
-    if request.method == 'GET':
+
+class MovieAV(APIView):
+    def get(self,request):
         movies = Movie.objects.all()
         serializers = MovieSerializer(movies,many=True) #many for querysets 
         return Response(serializers.data)
-    if request.method == 'POST':
+    def post(self,request):
         serializer = MovieSerializer(data=request.data)
         print(request.get['name'])
         if serializer.is_valid():
@@ -19,6 +20,26 @@ def movie_list(request):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
+
+
+
+
+
+# @api_view(['GET','POST'])
+# def movie_list(request):
+#     if request.method == 'GET':
+#         movies = Movie.objects.all()
+#         serializers = MovieSerializer(movies,many=True) #many for querysets 
+#         return Response(serializers.data)
+#     if request.method == 'POST':
+#         serializer = MovieSerializer(data=request.data)
+#         print(request.get['name'])
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         else:
+#             return Response(serializer.errors)
 
 
 @api_view(['GET','PUT','DELETE'])
